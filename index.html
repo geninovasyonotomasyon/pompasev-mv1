@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dalgıç Pompa & Solar Seçim Danışmanı 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @media print {
+            .no-print { display: none !important; }
+            .print-only { display: block !important; }
+            body { background: white !important; color: black !important; font-size: 12pt; }
+            .card { border: 1px solid #ccc !important; box-shadow: none !important; }
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 font-sans min-h-screen">
+    <!-- Header -->
+    <header class="bg-slate-900 text-white shadow-md no-print">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <i class="fa-solid fa-solar-panel text-amber-400 text-2xl"></i>
+                <div>
+                    <h1 class="text-xl font-bold leading-tight">GEN İnovasyon & Otomasyon</h1>
+                    <p class="text-xs text-slate-400">Dalgıç Pompa & Solar Seçim Danışmanı (2026 Kataloğu)</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-4 text-xs">
+                <div class="bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-700 flex items-center gap-2">
+                    <span class="text-slate-400">USD/TL (Akbank):</span>
+                    <input type="number" id="usdRate" value="38.50" step="0.1" class="w-16 bg-slate-900 text-amber-400 font-bold px-1 py-0.5 rounded text-center border border-slate-700 focus:outline-none" oninput="calculateTotal()">
+                </div>
+                <button onclick="window.print()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded-lg border border-slate-700 font-medium transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-print text-sm"></i> Yazdır / PDF
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- Selection Panel (Left Column) -->
+        <section class="lg:col-span-7 space-y-6 no-print">
+            
+            <!-- Motor & Pompa Seçimi -->
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
+                <h2 class="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-water text-blue-600"></i> POLDAP / Caprari Motor & Pompa Seçimi
+                </h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Motor Tipi & Gücü (2026 Liste)</label>
+                        <select id="motorSelect" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none" onchange="onMotorChange()">
+                            <optgroup label="4&quot; Yağ Soğutmalı Motorlar (Monofaze/Trifaze)">
+                                <option value="poldap_4_075_1p" data-price="250" data-kw="0.55" data-phase="1" data-start="DOL">4" 0.75 HP (0.55 kW) Monofaze - $250</option>
+                                <option value="poldap_4_300_1p" data-price="485" data-kw="2.20" data-phase="1" data-start="DOL">4" 3.0 HP (2.2 kW) Monofaze - $485</option>
+                                <option value="poldap_4_550_3p" data-price="726" data-kw="4.00" data-phase="3" data-start="DOL">4" 5.5 HP (4.0 kW) Trifaze (DOL) - $726</option>
+                                <option value="poldap_4_1000_3p" data-price="964" data-kw="7.50" data-phase="3" data-start="DOL">4" 10.0 HP (7.5 kW) Trifaze (DOL) - $964</option>
+                            </optgroup>
+                            <optgroup label="6&quot; HPL Su Soğutmalı Motorlar (Trifaze)">
+                                <option value="poldap_hpl_65" data-price="1496" data-kw="4.00" data-phase="3" data-start="DOL">HPL 65/3A 5.5 HP (4 kW) Direct (DOL) - $1,496</option>
+                                <option value="poldap_hpl_610" data-price="1723" data-kw="7.50" data-phase="3" data-start="DOL" selected>HPL 610/3A 10 HP (7.5 kW) Direct (DOL) - $1,723</option>
+                                <option value="poldap_hpl_620" data-price="2316" data-kw="15.00" data-phase="3" data-start="SD">HPL 620/3A 20 HP (15 kW) Yıldız-Üçgen (Y/Δ) - $2,316</option>
+                                <option value="poldap_hpl_630" data-price="2837" data-kw="22.00" data-phase="3" data-start="SD">HPL 630/3A 30 HP (22 kW) Yıldız-Üçgen (Y/Δ) - $2,837</option>
+                            </optgroup>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Paslanmaz Çelik Pompa Gövdesi</label>
+                        <select id="pumpSelect" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none" onchange="calculateTotal()">
+                            <option value="none" data-price="0">Pompa Gövdesi Hariç - $0</option>
+                            <option value="plp_404_09" data-price="439">PLP 404/09 (4" Paslanmaz - 0.75 HP / 1 1/4") - $439</option>
+                            <option value="plpx_610_05" data-price="914">PLPX 610/05 (6" Paslanmaz - 3 HP / 2 1/2") - $914</option>
+                            <option value="plpx_624_06" data-price="1109" selected>PLPX 624/06 (6" Paslanmaz - 5.5 HP / 3") - $1,109</option>
+                            <option value="plpx_877_01" data-price="1357">PLPX 877/01 (8" Paslanmaz - 5.5 HP / 5") - $1,357</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- EXELON İnverter & Akü Seçimi -->
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
+                <h2 class="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-bolt text-amber-500"></i> EXELON İnverter & Enerji Depolama
+                </h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">EXELON İnverter Tipi & Gücü</label>
+                        <select id="inverterSelect" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none" onchange="calculateTotal()">
+                            <optgroup label="EXELON Smart Off-Grid MPPT Serisi">
+                                <option value="ex_sm_3kw" data-price="430" data-kw="3.0" data-phase="1">3 kW Smart Inverter (24V MPPT) - $430</option>
+                                <option value="ex_sm_62kw" data-price="575" data-kw="6.2" data-phase="1">6.2 kW Smart Inverter (48V MPPT) - $575</option>
+                                <option value="ex_sm_102kw" data-price="1135" data-kw="10.2" data-phase="1">10.2 kW Smart Inverter (48V MPPT) - $1,135</option>
+                                <option value="ex_sm_12kw" data-price="1350" data-kw="12.0" data-phase="1">12 kW Paralel Inverter (48V MPPT) - $1,350</option>
+                            </optgroup>
+                            <optgroup label="EXELON 3-Faz LV Hibrit Serisi (Sanayi / Tarımsal)">
+                                <option value="ex_hy_12kw" data-price="3900" data-kw="12.0" data-phase="3" selected>12 kW 3-Faz LV Hibrit Inverter (48V) - $3,900</option>
+                                <option value="ex_hy_15kw" data-price="4650" data-kw="15.0" data-phase="3">15 kW 3-Faz LV Hibrit Inverter (48V) - $4,650</option>
+                                <option value="ex_hy_20kw" data-price="5900" data-kw="20.0" data-phase="3">20 kW 3-Faz LV Hibrit Inverter (48V) - $5,900</option>
+                            </optgroup>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">EXELON LiFePO4 Lityum Batarya (51.2V)</label>
+                        <select id="batterySelect" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-amber-500 focus:outline-none" onchange="calculateTotal()">
+                            <option value="none" data-price="0">Lityum Batarya Yok - $0</option>
+                            <option value="ex_bat_5kw_rack" data-price="1800">5 kW Rack Montaj (100 Ah) - $1,800</option>
+                            <option value="ex_bat_5kw_wall" data-price="1850">5 kW Duvar Tipi (100 Ah) - $1,850</option>
+                            <option value="ex_bat_10kw" data-price="3580" selected>10 kW Batarya Depolama (200 Ah) - $3,580</option>
+                            <option value="ex_bat_14kw" data-price="4690">14 kW Batarya Depolama (280 Ah) - $4,690</option>
+                            <option value="ex_bat_16kw" data-price="4900">16 kW Batarya Depolama (314 Ah) - $4,900</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Live Safeguard Alert -->
+                <div id="compatibilityBadge" class="p-3 rounded-lg text-xs font-medium flex items-center gap-2 transition-all">
+                    <!-- Dynamic validation message -->
+                </div>
+            </div>
+
+            <!-- Müşteri ve Proje Bilgileri -->
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 space-y-4">
+                <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                    <i class="fa-solid fa-id-card text-emerald-600"></i> Teklif & Müşteri Detayları
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Müşteri / Firma Adı</label>
+                        <input type="text" id="clientName" value="Örnek Tarım Ltd. Şti." class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500" oninput="updateSummary()">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Saha / Lokasyon</label>
+                        <input type="text" id="clientLocation" value="Kayseri / Sarız" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500" oninput="updateSummary()">
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- Right Column: Live Quotation Summary & Print View -->
+        <section class="lg:col-span-5">
+            <div class="bg-white rounded-xl shadow-lg border border-slate-200 p-6 sticky top-6 card" id="printArea">
+                
+                <!-- Print Header -->
+                <div class="hidden print-only mb-6 border-b border-slate-300 pb-4">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h1 class="text-2xl font-bold text-slate-900">GEN İNOVASYON & OTOMASYON</h1>
+                            <p class="text-xs text-slate-600">Güneş Enerjisi Sistemleri & Dalgıç Pompa Otomasyonu</p>
+                            <p class="text-xs text-slate-500">Tel: 0 (5XX) XXX XX XX | Sarız / KAYSERİ</p>
+                        </div>
+                        <div class="text-right text-xs text-slate-500">
+                            <p class="font-bold text-slate-800">TEKLİF BELGESİ</p>
+                            <p>Tarih: <span id="quoteDate">08.11.2026</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-center mb-4 no-print">
+                    <h3 class="font-bold text-slate-900 text-base flex items-center gap-2">
+                        <i class="fa-solid fa-file-invoice-dollar text-emerald-600"></i> Teklif Özeti (2026)
+                    </h3>
+                    <button onclick="copyQuoteText()" class="text-xs text-slate-600 hover:text-emerald-700 bg-slate-100 hover:bg-slate-200 px-2.5 py-1 rounded transition flex items-center gap-1">
+                        <i class="fa-regular fa-copy"></i> Metni Kopyala
+                    </button>
+                </div>
+
+                <!-- Customer info preview -->
+                <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 mb-4 text-xs space-y-1">
+                    <p><span class="text-slate-500">Müşteri:</span> <strong id="dispClient" class="text-slate-800">Örnek Tarım Ltd. Şti.</strong></p>
+                    <p><span class="text-slate-500">Lokasyon:</span> <span id="dispLoc" class="text-slate-700">Kayseri / Sarız</span></p>
+                </div>
+
+                <!-- Selected Equipment Table -->
+                <div class="border-t border-b border-slate-200 py-3 my-3 space-y-2 text-xs">
+                    <div class="flex justify-between gap-2">
+                        <span class="text-slate-600" id="itemMotorName">Motor: HPL 610/3A (10 HP)</span>
+                        <span class="font-semibold text-slate-900" id="itemMotorPrice">$1,723</span>
+                    </div>
+                    <div class="flex justify-between gap-2">
+                        <span class="text-slate-600" id="itemPumpName">Pompa: PLPX 624/06 (6")</span>
+                        <span class="font-semibold text-slate-900" id="itemPumpPrice">$1,109</span>
+                    </div>
+                    <div class="flex justify-between gap-2">
+                        <span class="text-slate-600" id="itemInverterName">İnverter: 12 kW 3-Faz Hibrit</span>
+                        <span class="font-semibold text-slate-900" id="itemInverterPrice">$3,900</span>
+                    </div>
+                    <div class="flex justify-between gap-2">
+                        <span class="text-slate-600" id="itemBatteryName">Akü: 10 kW LiFePO4 Depolama</span>
+                        <span class="font-semibold text-slate-900" id="itemBatteryPrice">$3,580</span>
+                    </div>
+                </div>
+
+                <!-- Cost Breakdown -->
+                <div class="space-y-1.5 text-xs text-slate-600">
+                    <div class="flex justify-between">
+                        <span>Ara Toplam (KDV Hariç - EXW):</span>
+                        <span class="font-semibold text-slate-800" id="subtotalUSD">$10,312.00</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span>KDV (%20):</span>
+                        <span class="font-semibold text-slate-800" id="kdvUSD">$2,062.40</span>
+                    </div>
+                    <div class="flex justify-between text-slate-900 font-bold text-sm pt-2 border-t border-slate-200">
+                        <span>Genel Toplam (USD):</span>
+                        <span class="text-emerald-700" id="totalUSD">$12,374.40</span>
+                    </div>
+                    <div class="flex justify-between text-slate-500 text-xs">
+                        <span>TL Karşılığı (Akbank Gişe):</span>
+                        <span class="font-bold text-slate-800" id="totalTRY">₺476,414.40</span>
+                    </div>
+                </div>
+
+                <!-- Commercial Terms Box -->
+                <div class="mt-5 pt-4 border-t border-slate-200 text-[11px] text-slate-500 space-y-1 bg-slate-50 p-3 rounded-lg border border-slate-200">
+                    <p class="font-bold text-slate-700 mb-1">Resmî Ticari Koşullar & Notlar:</p>
+                    <p>• <strong>KDV:</strong> Fiyatlarımıza %20 KDV dahil değildir.</p>
+                    <p>• <strong>Teslimat:</strong> EXW Fabrika teslimidir. Nakliye alıcıya aittir.</p>
+                    <p>• <strong>Döviz Kuru:</strong> Sevk tarihindeki Akbank Gişe Satış Kuru esas alınır.</p>
+                    <p>• <strong>Ödeme Koşulu:</strong> Fatura kesiminden itibaren 10 gün içinde çek ile ödenir.</p>
+                    <p>• <strong>Gecikme Zammı:</strong> Vadesi geçen ödemelerde aylık %6 faiz + KDV uygulanır.</p>
+                </div>
+
+                <div class="hidden print-only mt-12 pt-8 border-t border-slate-300 text-xs flex justify-between">
+                    <div class="text-center w-1/3">
+                        <p class="font-bold text-slate-800">Teslim Eden</p>
+                        <p class="text-slate-500 mt-8">GEN İnovasyon & Otomasyon</p>
+                    </div>
+                    <div class="text-center w-1/3">
+                        <p class="font-bold text-slate-800">Müşteri Onayı</p>
+                        <p class="text-slate-500 mt-8">İmza / Kaşe</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        function calculateTotal() {
+            // Motor
+            const motorEl = document.getElementById('motorSelect');
+            const motorOpt = motorEl.options[motorEl.selectedIndex];
+            const motorPrice = parseFloat(motorOpt.getAttribute('data-price')) || 0;
+            const motorKw = parseFloat(motorOpt.getAttribute('data-kw')) || 0;
+            const motorPhase = parseInt(motorOpt.getAttribute('data-phase')) || 1;
+            const motorStart = motorOpt.getAttribute('data-start') || 'DOL';
+
+            // Pump
+            const pumpEl = document.getElementById('pumpSelect');
+            const pumpOpt = pumpEl.options[pumpEl.selectedIndex];
+            const pumpPrice = parseFloat(pumpOpt.getAttribute('data-price')) || 0;
+
+            // Inverter
+            const invEl = document.getElementById('inverterSelect');
+            const invOpt = invEl.options[invEl.selectedIndex];
+            const invPrice = parseFloat(invOpt.getAttribute('data-price')) || 0;
+            const invKw = parseFloat(invOpt.getAttribute('data-kw')) || 0;
+            const invPhase = parseInt(invOpt.getAttribute('data-phase')) || 1;
+
+            // Battery
+            const batEl = document.getElementById('batterySelect');
+            const batOpt = batEl.options[batEl.selectedIndex];
+            const batPrice = parseFloat(batOpt.getAttribute('data-price')) || 0;
+
+            // Exchange Rate
+            const usdRate = parseFloat(document.getElementById('usdRate').value) || 38.5;
+
+            // Update UI Items
+            document.getElementById('itemMotorName').textContent = 'Motor: ' + motorOpt.text.split(' - ')[0];
+            document.getElementById('itemMotorPrice').textContent = '$' + motorPrice.toLocaleString('en-US');
+
+            document.getElementById('itemPumpName').textContent = 'Pompa: ' + pumpOpt.text.split(' - ')[0];
+            document.getElementById('itemPumpPrice').textContent = '$' + pumpPrice.toLocaleString('en-US');
+
+            document.getElementById('itemInverterName').textContent = 'İnverter: ' + invOpt.text.split(' - ')[0];
+            document.getElementById('itemInverterPrice').textContent = '$' + invPrice.toLocaleString('en-US');
+
+            document.getElementById('itemBatteryName').textContent = 'Akü: ' + batOpt.text.split(' - ')[0];
+            document.getElementById('itemBatteryPrice').textContent = '$' + batPrice.toLocaleString('en-US');
+
+            // Calculations
+            const subtotal = motorPrice + pumpPrice + invPrice + batPrice;
+            const kdv = subtotal * 0.20;
+            const totalUSD = subtotal + kdv;
+            const totalTRY = totalUSD * usdRate;
+
+            document.getElementById('subtotalUSD').textContent = '$' + subtotal.toLocaleString('en-US', {minimumFractionDigits: 2});
+            document.getElementById('kdvUSD').textContent = '$' + kdv.toLocaleString('en-US', {minimumFractionDigits: 2});
+            document.getElementById('totalUSD').textContent = '$' + totalUSD.toLocaleString('en-US', {minimumFractionDigits: 2});
+            document.getElementById('totalTRY').textContent = '₺' + totalTRY.toLocaleString('tr-TR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+
+            // Compatibility Safeguard Logic
+            const badge = document.getElementById('compatibilityBadge');
+            let isCompatible = true;
+            let msg = "";
+
+            if (motorPhase !== invPhase) {
+                isCompatible = false;
+                msg = ` UYARI: Seçilen motor ${motorPhase} fazlı, ancak inverter ${invPhase} fazlı!`;
+            } else if (invKw < motorKw * 1.2) {
+                isCompatible = false;
+                msg = ` UYARI: İnverter gücü (${invKw} kW), motorun kalkış ve demeraj ihtiyacına (${motorKw} kW) kıyasla yetersiz kalabilir! En az ${ (motorKw * 1.25).toFixed(1) } kW inverter önerilir.`;
+            } else {
+                msg = ` UYUMLU: ${invKw} kW Inverter, ${motorKw} kW motor için uygundur. (Kalkış Tipi: ${motorStart})`;
+            }
+
+            if (isCompatible) {
+                badge.className = "p-3 rounded-lg text-xs font-medium bg-emerald-50 text-emerald-800 border border-emerald-200 flex items-center gap-2";
+                badge.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600"></i>` + msg;
+            } else {
+                badge.className = "p-3 rounded-lg text-xs font-medium bg-rose-50 text-rose-800 border border-rose-200 flex items-center gap-2";
+                badge.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-rose-600"></i>` + msg;
+            }
+        }
+
+        function onMotorChange() {
+            calculateTotal();
+        }
+
+        function updateSummary() {
+            const name = document.getElementById('clientName').value || 'Örnek Müşteri';
+            const loc = document.getElementById('clientLocation').value || 'Kayseri';
+            document.getElementById('dispClient').textContent = name;
+            document.getElementById('dispLoc').textContent = loc;
+        }
+
+        function copyQuoteText() {
+            const name = document.getElementById('dispClient').textContent;
+            const loc = document.getElementById('dispLoc').textContent;
+            const totalUsd = document.getElementById('totalUSD').textContent;
+            const totalTry = document.getElementById('totalTRY').textContent;
+
+            const text = `GEN İNOVASYON & OTOMASYON - Güneş Enerjili Dalgıç Pompa Teklifi\n` +
+                         `Müşteri: ${name}\nLokasyon: ${loc}\n` +
+                         `------------------------------------\n` +
+                         `${document.getElementById('itemMotorName').textContent} (${document.getElementById('itemMotorPrice').textContent})\n` +
+                         `${document.getElementById('itemPumpName').textContent} (${document.getElementById('itemPumpPrice').textContent})\n` +
+                         `${document.getElementById('itemInverterName').textContent} (${document.getElementById('itemInverterPrice').textContent})\n` +
+                         `${document.getElementById('itemBatteryName').textContent} (${document.getElementById('itemBatteryPrice').textContent})\n` +
+                         `------------------------------------\n` +
+                         `Genel Toplam (KDV Dahil): ${totalUsd} / ${totalTry}\n` +
+                         `Ödeme Koşulu: 10 Gün Çek / Fabrika Teslim EXW`;
+
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Teklif detayı panoya kopyalandı!');
+            });
+        }
+
+        // Init
+        document.addEventListener('DOMContentLoaded', () => {
+            const today = new Date().toLocaleDateString('tr-TR');
+            document.getElementById('quoteDate').textContent = today;
+            calculateTotal();
+            updateSummary();
+        });
+    </script>
+</body>
+</html>
